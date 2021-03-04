@@ -2,7 +2,7 @@ module.exports = {
   title: 'Vulpem Docs',
   tagline: 'Banking on Bitcoin - Enabling the next generation of bitcoin-native financial services',
   url: 'https://docs.vulpem.com',
-  baseUrl: '/',
+  baseUrl: '/docs.vulpem.com/', // TODO change before production with custom domain
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
