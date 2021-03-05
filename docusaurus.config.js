@@ -13,16 +13,14 @@ module.exports = {
       title: 'Vulpem Docs',
       logo: {
         alt: 'Vulpem Ventures Logo',
-        src: 'img/logo.svg',
+        src: 'img/vulpem_logo.png',
       },
       items: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'left',
+          href: 'mailto:hello@vulpem.com',
+          label: 'Contact',
+          position: 'right',
         },
-        { to: 'blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/vulpemventures/docs.vulpem.com',
           label: 'GitHub',
@@ -36,7 +34,7 @@ module.exports = {
         {
           title: 'Docs',
           items: [
-            /* {
+            {
               label: 'Marina',
               to: 'docs/marina/',
             },
@@ -47,7 +45,7 @@ module.exports = {
             {
               label: 'Liquid.Taxi',
               to: 'docs/taxi/',
-            }, */
+            },
           ],
         },
         {
@@ -64,7 +62,7 @@ module.exports = {
           items: [
             {
               label: 'Blog',
-              to: 'blog',
+              href: 'vulpem.medium.com',
             },
             {
               label: 'GitHub',
@@ -73,7 +71,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Vulpem Ventures OU. Built with Docusaurus.`,
     },
   },
   presets: [
@@ -81,16 +79,11 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+            'https://github.com/vulpemventures/docs.vulpem.com/edit/master/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
