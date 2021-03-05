@@ -5,7 +5,7 @@ module.exports = {
   baseUrl: '/docs.vulpem.com/', // TODO change before production with custom domain
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
   organizationName: 'vulpemventures', // Usually your GitHub org/user name.
   projectName: 'docs.vulpem.com', // Usually your repo name.
   themeConfig: {
@@ -32,23 +32,6 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Marina',
-              to: 'docs/marina/',
-            },
-            {
-              label: 'Nigiri',
-              to: 'docs/nigiri/',
-            },
-            {
-              label: 'Liquid.Taxi',
-              to: 'docs/taxi/',
-            },
-          ],
-        },
-        {
           title: 'Community',
           items: [
             {
@@ -62,7 +45,7 @@ module.exports = {
           items: [
             {
               label: 'Blog',
-              href: 'vulpem.medium.com',
+              href: 'https://vulpem.medium.com',
             },
             {
               label: 'GitHub',
