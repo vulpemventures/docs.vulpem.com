@@ -1,7 +1,7 @@
 ---
 id: getting-started
 title: Getting Started
-image: ./static/img/marina_logo.svg
+image: /img/marina_logo.svg
 ---
 
 To develop for Marina, install Marina on your development machine. [Download here](https://vulpem.com/marina).
@@ -29,34 +29,9 @@ if (typeof window.marina !== 'undefined') {
 You can review the full API for the `window.marina` object [here](api.md).
 
 
-### Connecting to Marina
+## Running in RegTest
 
-"Connect" to Marina effectively means "to access the user's addresses and relative blinding keys". This is necessary to be able to create watch-only wallets or to build and properly fund a transactions in your application.
-
-You should **never** initiate a connection request on page load.
-You should **only** initiate a connection request in response to direct user action before explaining the privacy implications, such as clicking a button.
-
-
-Applications that need access to the wallet must first request that the extension is enabled.
-
-```js
-await window.marina.enable()
-```
-This will prompt the user to allow access to the wallet for the application.
-
-<img src="../../static/img/marina_connect_screenshot.png" alt="Marina Connect" width="300"/>
-
-If the prompt is accepted, will be possible to call the APIs
-
-To disconnect
-```js
-await window.marina.disable()
-```
-
-
-## RegTest
-
-Don't be to o reckless and develop your applications against a local testnet. Marina defaults to `http://localhost:3001` wich is the REST API endpoint of the Electrs-compatible server exposed by [Nigiri box](https://vulpem.com/nigiri). You can download and run an Electrs instance from [here](https://github.com/blockstream/electrs), but we strongly suggest Nigiri which setup a complete RegTest environment in one click. Moreover the Electrs-compatible server exposed adds nice features for developers suchs as `/mint` and `/faucet` endpoints with automatic block generation and a Liquid asset registry similar to what Blockstream maintains.
+Don't be too reckless. You should develop your applications against a local testnet. Marina defaults to `http://localhost:3001` wich is the REST API endpoint of the Electrs-compatible server exposed by [Nigiri box](https://vulpem.com/nigiri). You can download and run an Electrs instance from [here](https://github.com/blockstream/electrs), but we strongly suggest Nigiri which setup a complete RegTest environment in one click. Moreover the Electrs-compatible server exposed adds nice features for developers suchs as `/mint` and `/faucet` endpoints with automatic block generation and a Liquid asset registry similar to what Blockstream maintains.
 
 ### Install Nigiri 
 

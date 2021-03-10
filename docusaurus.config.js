@@ -2,13 +2,21 @@ module.exports = {
   title: 'Vulpem Docs',
   tagline: 'Banking on Bitcoin - Enabling the next generation of bitcoin-native financial services',
   url: 'https://docs.vulpem.com',
-  baseUrl: '/docs.vulpem.com/', // TODO change before production with custom domain
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.png',
   organizationName: 'vulpemventures', // Usually your GitHub org/user name.
   projectName: 'docs.vulpem.com', // Usually your repo name.
   themeConfig: {
+    colorMode: {
+      defaultMode: 'light',
+    },
+    prism: {
+      theme: require('prism-react-renderer/themes/vsDark'),
+      darkTheme: require('prism-react-renderer/themes/synthwave84')
+
+    },
     navbar: {
       title: 'Vulpem Docs',
       logo: {

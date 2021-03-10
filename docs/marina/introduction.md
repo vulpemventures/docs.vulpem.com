@@ -1,7 +1,7 @@
 ---
 id: introduction
 title: Introduction
-image: ./static/img/marina_logo.svg
+image: /img/marina_logo.svg
 ---
 
 Welcome to Marina's Developer Documentation. This documentation is for learning how to develop web applications for the Liquid Network.
@@ -13,7 +13,7 @@ Welcome to Marina's Developer Documentation. This documentation is for learning 
 
 ## Blockchain
 
-Marina connects to `Blockstream.info` Electrs REST API andhis allows you to get started without synchronizing a full node, while still providing the option to upgrade your security and use the Electrs REST server of your choice. In the future we may allow authenticated JSONRPC HTTP/1.x connection to your own Elements node.
+Marina connects to `Blockstream.info` Electrs REST API and this allows you to get started without synchronizing a full node, while still providing the option to upgrade your security and use the Electrs REST server of your choice. In the future we will allow authenticated JSONRPC HTTP/1.x connection to your own Elements node.
 
 ## Wallet 
 
