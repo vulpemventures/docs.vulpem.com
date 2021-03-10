@@ -55,7 +55,7 @@ import { fetchAndUnblindUtxos } from 'ldk';
 
 //...
 
-// Get al addresses from marina
+// Get all addresses and blinding keys from marina
 const addrs = await window.marina.getAddresses();
 
 // fetch and unblind all utxos for given array of address
