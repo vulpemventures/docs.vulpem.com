@@ -6,7 +6,7 @@ image: /img/marina_logo.svg
 
 ## Send to an address
 
-You can delegate Marina to build, blind, sign and send a Liquid transaction to a single recipient. You do not need to know anything about current balance, although is suggetsed to retrieve and display the [balances](balances.md) in your application for better UX and to check beforehand for sufficient funds.
+You can delegate Marina to create, fund, blind, sign and broadcast a Liquid transaction to a recipient. You do not need to know anything about current balance, although is suggetsed to retrieve and display the [balances](balances.md) in your application for better UX and to check beforehand for sufficient funds.
 
 
 ```js
@@ -38,7 +38,7 @@ If the prompt is accepted, will be possible to send the transaction
 
 ## Custom transaction
 
-Developers can build custom transactions using the unspents of the exposed addresses and can delegate Marina to blind and sign with the user consent.
+Developers can build custom transactions using the unspents of the exposed addresses and can delegate Marina to sign with the user consent.
 
 
 
