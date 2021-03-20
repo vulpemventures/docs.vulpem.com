@@ -22,7 +22,10 @@ module.exports = {
       type: 'category',
       label: 'Nigiri',
       items: [
-        'nigiri/introduction'
+        'nigiri/introduction',
+        'nigiri/getting-started',
+        'nigiri/tasting',
+        'nigiri/nutrition-facts'
       ]
     },
     {
