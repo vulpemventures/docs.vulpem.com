@@ -9,6 +9,7 @@ Welcome to Marina's Developer Documentation. This documentation is for learning 
 - You can find the latest version of Marina on our [website](https://vulpem.com/marina).
 - For help using Marina, [join our Telegram channel](https://t.me/marina_wallet).
 - To report bugs or make feature request [open an issue on the Github repository](https://github.com/vulpemventures/marina/issues/new).
+- To stay in touch [follow us on Twitter](https://twitter.com/MarinaWallet)
 
 
 ## Blockchain
