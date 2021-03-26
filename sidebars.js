@@ -13,9 +13,7 @@ module.exports = {
         'marina/connect',
         'marina/balances',
         'marina/transaction',
-        {
-          'API Reference': ['marina/api'],
-        },
+        'marina/api',
       ],
     },
     {
@@ -28,19 +26,19 @@ module.exports = {
         'nigiri/nutrition-facts'
       ]
     },
-    {
-      type: 'category',
-      label: 'Taxi',
-      items: [
-        'taxi/introduction'
-      ]
-    },
-    {
-      type: 'category',
-      label: 'LDK',
-      items: [
-        'ldk/introduction'
-      ]
-    },
+    /*  {
+       type: 'category',
+       label: 'Taxi',
+       items: [
+         'taxi/introduction'
+       ]
+     },
+     {
+       type: 'category',
+       label: 'LDK',
+       items: [
+         'ldk/introduction'
+       ]
+     }, */
   ]
 };
