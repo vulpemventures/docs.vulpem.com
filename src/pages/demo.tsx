@@ -6,6 +6,11 @@ const explorerApiUrl: Record<string, string> = {
   'liquid': 'https://blockstream.info/liquid/api',
 };
 
+const L_BTC: Record<string, string> = {
+  'regtest': '5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225',
+  'liquid': '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d'
+}
+
 
 interface Props { }
 
@@ -18,7 +23,7 @@ const MarinaExample: React.FC<Props> = () => {
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState(0);
   const [tx, setTx] = useState('');
-  const [network, setNetwork] = useState<'liquid' | 'regtest'>('regtest');
+  const [network, setNetwork] = useState<'liquid' | 'regtest'>('liquid');
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
 
@@ -38,7 +43,6 @@ const MarinaExample: React.FC<Props> = () => {
         return;
 
       const isEnabled = await marina.isEnabled();
-      console.log(isEnabled);
       setConnected(isEnabled);
 
       const net = await marina.getNetwork();
@@ -60,39 +64,44 @@ const MarinaExample: React.FC<Props> = () => {
   const send = async () => {
     try {
       const rawtx = await marina.sendTransaction(
-        "Azpq3eq1oZhPYTvB21n8t4FqDvvNhXLbuF1UnaAuWV8oGPUqYdXXJNmsmoZKvmcxLSHwLoVhddCuGpDQ",
-        50000,
-        "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225"
+        recipient,
+        amount,
+        L_BTC[network]
       );
       console.log(rawtx);
       setTx(rawtx);
 
     } catch (e) {
       console.error(e);
-      setError(e.message);
+      setError(e.message || JSON.stringify(e));
     }
 
   }
 
   const push = async () => {
-    console.log(`${explorerApiUrl[network]}/tx`)
-    const response = await fetch(
-      `${explorerApiUrl[network]}/tx`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/text',
-        },
-        body: tx
+    try {
+      const response = await fetch(
+        `${explorerApiUrl[network]}/tx`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/text',
+          },
+          body: tx
+        }
+      );
+      if (!response.ok) {
+        console.error("not ok")
+        setError("explorer error")
+        return;
       }
-    );
-    if (!response.ok) {
-      console.error("not ok")
+      const data = await response.text();
+      setTxHash(data);
+    } catch (e) {
+      console.error(e);
+      setError(e.message || JSON.stringify(e));
     }
-    const data = await response.text();
-    console.log(data);
 
-    setTxHash(data);
   }
 
   return (
@@ -125,7 +134,7 @@ const MarinaExample: React.FC<Props> = () => {
             }
             <br />
             <label>
-              Recipient
+              Recipient (Liquid address)
             </label>
             <input
               type="text"
@@ -138,11 +147,11 @@ const MarinaExample: React.FC<Props> = () => {
             />
             <br />
             <label>
-              Amount
+              Amount (in satoshis)
             </label>
             <input
               type="number"
-              min={0.00000001}
+              min={1}
               value={amount}
               onChange={(evt: any) => setAmount(evt.target.value)}
               style={{
@@ -166,7 +175,13 @@ const MarinaExample: React.FC<Props> = () => {
                 <p>
                   {tx.substring(0, 20) + "..."}
                 </p>
-                <button onClick={push}>
+                <button
+                  onClick={push}
+                  style={{
+                    height: '50px',
+                    width: '350px'
+                  }}
+                >
                   Broadcast
                 </button>
               </>
