@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { MarinaProvider } from 'marina-provider';
 
 const explorerApiUrl: Record<string, string> = {
   'regtest': 'http://localhost:3001',
@@ -20,21 +21,20 @@ const MarinaExample: React.FC<Props> = () => {
 
   const marina: MarinaProvider = (window as any).marina;
 
-  const getNetwork = async () => {
-    try {
 
+  useEffect(() => {
+    void (async (): Promise<void> => {
+      const isEnabled = await marina.isEnabled();
+      console.log(isEnabled);
+      setConnected(isEnabled);
 
-    } catch (e) {
-      console.error(e);
-      setError(e.message);
-    }
-  }
+      const net = await marina.getNetwork();
+      setNetwork(net);
+    })();
+  }, [])
 
   const enable = async () => {
     try {
-      const net = await marina.getNetwork();
-      setNetwork(net);
-
       // we enable the webiste
       await marina.enable();
       setConnected(true);
@@ -135,32 +135,3 @@ const MarinaExample: React.FC<Props> = () => {
 export default MarinaExample;
 
 
-
-interface AddressInterface {
-  confidentialAddress: string;
-  blindingPrivateKey: string;
-  derivationPath?: string;
-}
-
-interface MarinaProvider {
-  enable(): Promise<void>;
-  disable(): Promise<void>;
-
-  setAccount(account: number): Promise<void>;
-
-  getNetwork(): Promise<'liquid' | 'regtest'>;
-
-  getAddresses(): Promise<AddressInterface[]>;
-
-  getNextAddress(): Promise<AddressInterface>;
-  getNextChangeAddress(): Promise<AddressInterface>;
-
-  sendTransaction(
-    recipientAddress: string,
-    amountInSatoshis: number,
-    assetHash: string
-  ): Promise<string>;
-
-  blindTransaction(psetBase64: string): Promise<string>;
-  signTransaction(psetBase64: string): Promise<string>;
-}

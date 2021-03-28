@@ -6251,6 +6251,11 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+marina-provider@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/marina-provider/-/marina-provider-1.0.0.tgz#dbd9897db117cc35d31755b41b4ea7054b7a3035"
+  integrity sha512-hpZGcH5D0ZVwPtRvWlv5BUw69ZnoQc4iCEVTI7/eUZAqoaUUzyp7OpDY/UTLoaRWo++4mTKHtAGps8pGmD05jw==
+
 markdown-escapes@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
