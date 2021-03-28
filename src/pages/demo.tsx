@@ -13,7 +13,10 @@ interface Props { }
 const MarinaExample: React.FC<Props> = () => {
 
 
+  const [installed, setInstalled] = useState(false);
   const [connected, setConnected] = useState(false);
+  const [recipient, setRecipient] = useState('');
+  const [amount, setAmount] = useState(0);
   const [tx, setTx] = useState('');
   const [network, setNetwork] = useState<'liquid' | 'regtest'>('regtest');
   const [error, setError] = useState('');
@@ -28,6 +31,12 @@ const MarinaExample: React.FC<Props> = () => {
 
   useEffect(() => {
     void (async (): Promise<void> => {
+      const isInstalled = typeof (window as any).marina !== 'undefined';
+      setInstalled(isInstalled);
+
+      if (!isInstalled)
+        return;
+
       const isEnabled = await marina.isEnabled();
       console.log(isEnabled);
       setConnected(isEnabled);
@@ -100,38 +109,81 @@ const MarinaExample: React.FC<Props> = () => {
         Hello! Welcome to a Marina-powered Liquid web app
         </h1>
       <br />
-      <p>
-        {`Marina is ${connected ? `enabled` : `disabled`}`}
-      </p>
-      <p>
-        {connected && `Network: ${network}`}
-      </p>
-      {!connected &&
-        <button onClick={enable}>
-          Enable Marina to access your addresses
-          </button>
-      }
-      <br />
-      <button onClick={send}>
-        Send 50k satoshis of LBTC
-        </button>
       {
-        tx.length > 0 &&
-        <>
-          <p>
-            {tx.substring(0, 20) + "..."}
-          </p>
-          <button onClick={push}>
-            Broadcast
+        installed ?
+          <>
+            <p>
+              {`Marina is ${connected ? `enabled` : `disabled`}`}
+            </p>
+            <p>
+              {connected && `Network: ${network}`}
+            </p>
+            {!connected &&
+              <button onClick={enable}>
+                Enable Marina to access your addresses
+              </button>
+            }
+            <br />
+            <label>
+              Recipient
+            </label>
+            <input
+              type="text"
+              value={recipient}
+              onChange={(evt: any) => setRecipient(evt.target.value)}
+              style={{
+                height: '50px',
+                width: '350px'
+              }}
+            />
+            <br />
+            <label>
+              Amount
+            </label>
+            <input
+              type="number"
+              min={0.00000001}
+              value={amount}
+              onChange={(evt: any) => setAmount(evt.target.value)}
+              style={{
+                height: '50px',
+                width: '350px'
+              }}
+            />
+            <br />
+            <button
+              onClick={send}
+              style={{
+                height: '50px',
+                width: '350px'
+              }}
+            >
+              Send LBTC
             </button>
-        </>
+            {
+              tx.length > 0 &&
+              <>
+                <p>
+                  {tx.substring(0, 20) + "..."}
+                </p>
+                <button onClick={push}>
+                  Broadcast
+                </button>
+              </>
+            }
+            <p style={{ color: "red" }}>
+              {error}
+            </p>
+            <p style={{ color: "darkgreen" }}>
+              {txHash}
+            </p>
+          </> :
+          <>
+            <p>
+              Marina is not installed
+            </p>
+          </>
       }
-      <p style={{ color: "red" }}>
-        {error}
-      </p>
-      <p style={{ color: "darkgreen" }}>
-        {txHash}
-      </p>
     </div>
   );
 }
