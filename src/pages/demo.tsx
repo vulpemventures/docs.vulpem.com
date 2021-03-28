@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { MarinaProvider } from 'marina-provider';
 
-const explorerApiUrl: Record<string, string> = {
-  'regtest': 'http://localhost:3001',
-  'liquid': 'https://blockstream.info/liquid/api',
-};
+import copy from 'copy-to-clipboard';
+
 
 const L_BTC: Record<string, string> = {
   'regtest': '5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225',
@@ -78,31 +76,6 @@ const MarinaExample: React.FC<Props> = () => {
 
   }
 
-  const push = async () => {
-    try {
-      const response = await fetch(
-        `${explorerApiUrl[network]}/tx`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/text',
-          },
-          body: tx
-        }
-      );
-      if (!response.ok) {
-        console.error("not ok")
-        setError("explorer error")
-        return;
-      }
-      const data = await response.text();
-      setTxHash(data);
-    } catch (e) {
-      console.error(e);
-      setError(e.message || JSON.stringify(e));
-    }
-
-  }
 
   return (
     <div
@@ -173,24 +146,21 @@ const MarinaExample: React.FC<Props> = () => {
               tx.length > 0 &&
               <>
                 <p>
-                  {tx.substring(0, 20) + "..."}
+                  {tx.substring(0, 20) + "..." + tx.substring((tx.length - 20), tx.length)}
                 </p>
                 <button
-                  onClick={push}
+                  onClick={() => copy(tx)}
                   style={{
                     height: '50px',
                     width: '350px'
                   }}
                 >
-                  Broadcast
+                  Copy to clipboard
                 </button>
               </>
             }
             <p style={{ color: "red" }}>
               {error}
-            </p>
-            <p style={{ color: "darkgreen" }}>
-              {txHash}
             </p>
           </> :
           <>
