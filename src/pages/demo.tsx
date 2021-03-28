@@ -19,6 +19,10 @@ const MarinaExample: React.FC<Props> = () => {
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
 
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   const marina: MarinaProvider = (window as any).marina;
 
 
