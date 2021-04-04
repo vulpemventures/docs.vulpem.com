@@ -23,7 +23,6 @@ const MarinaExample: React.FC<Props> = () => {
   const [tx, setTx] = useState('');
   const [network, setNetwork] = useState<'liquid' | 'regtest'>('liquid');
   const [error, setError] = useState('');
-  const [txHash, setTxHash] = useState('');
 
   if (typeof window === "undefined") {
     return null;

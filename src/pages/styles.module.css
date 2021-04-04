@@ -35,3 +35,24 @@
   height: 200px;
   width: 200px;
 }
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 50px,
+}

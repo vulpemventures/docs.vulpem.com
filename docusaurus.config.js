@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   title: 'Vulpem Docs',
   tagline: 'Banking on Bitcoin - Enabling the next generation of bitcoin-native financial services',
@@ -82,4 +83,5 @@ module.exports = {
       },
     ],
   ],
+  plugins: [path.resolve(__dirname, 'custom-webpack-config')]
 };
