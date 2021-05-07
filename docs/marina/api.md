@@ -92,22 +92,28 @@ marina.getNextChangeAddress(): Promise<AddressInterface>
 ### sendTransaction
 
 ```typescript
-marina.sendTransaction(recipientAddress: string, amountInSatoshis: number, assetHash: string ): Promise<string>
+marina.sendTransaction(recipientAddress: string, amountInSatoshis: number, assetHash: string ): Promise<TransactionHex>
 ```
 
 ### blindTransaction
 
 ```typescript 
-marina.blindTransaction(psetBase64: string): Promise<string>
+marina.blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
 
 ### signTransaction
 
 ```typescript 
-marina.signTransaction(psetBase64: string): Promise<string>
+marina.signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
 
-## Types
+### signMessage
+
+```typescript
+marina.signMessage(message: string): Promise<SignedMessage>;
+```
+
+## TypeScript specification
 
 ```typescript
 
@@ -117,20 +123,46 @@ interface AddressInterface {
   derivationPath?: string;
 }
 
+interface SignedMessage {
+  signature: SignatureBase64;
+  address: NativeSegwitAddress;
+}
+
+type TransactionHex = string;
+type PsetBase64 = string;
+type SignatureBase64 = string;
+type NativeSegwitAddress = string;
+
+
+
 interface MarinaProvider {
   enable(): Promise<void>;
+
   disable(): Promise<void>;
+
+  isEnabled(): Promise<boolean>;
+
+  setAccount(account: number): Promise<void>;
+
   getNetwork(): Promise<'liquid' | 'regtest'>;
+
   getAddresses(): Promise<AddressInterface[]>;
+
   getNextAddress(): Promise<AddressInterface>;
+
   getNextChangeAddress(): Promise<AddressInterface>;
+
   sendTransaction(
     recipientAddress: string,
     amountInSatoshis: number,
     assetHash: string
-  ): Promise<string>;
-  blindTransaction(psetBase64: string): Promise<string>;
-  signTransaction(psetBase64: string): Promise<string>;
+  ): Promise<TransactionHex>;
+
+  blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
+
+  signTransaction(pset: PsetBase64): Promise<PsetBase64>;
+
+  signMessage(message: string): Promise<SignedMessage>;
 }
 
 ```

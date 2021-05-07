@@ -20,13 +20,13 @@ const BtcLiquidRegtest = "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca29
 const amount = 700000
 
 // Send 0.007 LBTC to an address
-const txHash = await window.marina.sendTransaction(
+const rawTxHex = await window.marina.sendTransaction(
   recipient,
   amount,
   BtcLiquidRegtest,
 );
 
-console.log(txHash);
+console.log(rawTxHex);
 ```
 
 This will prompt the user to allow blinding & signing a transaction.
