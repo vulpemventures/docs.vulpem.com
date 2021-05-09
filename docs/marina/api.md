@@ -51,6 +51,7 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 * [sendTransaction](#sendtransaction)
 * [blindTransaction](#blindtransaction)
 * [signTransaction](#signtransaction)
+* [signMessage](#signmessage)
 
 
 ### enable
