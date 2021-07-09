@@ -10,49 +10,42 @@ We recommend that all web developers read from the [Getting started](getting-sta
 
 Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions.
 
-
 ```javascript
-
 const marina = window.marina;
 if (marina) {
   // From now on, this should always be true:
   // marina === window.marina
   initApp(marina); // initialize your app
 } else {
-  console.log('Please install Marina extension!');
+  console.log("Please install Marina extension!");
 }
-
 ```
 
 ## Basics
 
 For any non-trivial Liquid-powered web application to work, you will have to:
 
-* Detect if Marina provider is installed
-* If the first time for the user, ask permissions to connect 
-* Detect which network the user is connected to (either `liquid` or `regtest`)
-* Get the user's Liquid addresses(s) and blinding keys
+- Detect if Marina provider is installed
+- If the first time for the user, ask permissions to connect
+- Detect which network the user is connected to (either `liquid` or `regtest`)
+- Get the user's Liquid addresses(s) and blinding keys
 
 The snippet at the top of this page is sufficient for detecting the provider.
 
 The provider API is all you need to create a full-featured Liquid powered web application.
 
-
-
 ## API
 
-
-* [enable](#enable)
-* [disable](#disable)
-* [getNetwork](#getnetwork)
-* [getAddresses](#getaddresses)
-* [getNextAddress](#getnextaddress)
-* [getNextChangeAddress](#getnextchangeaddress)
-* [sendTransaction](#sendtransaction)
-* [blindTransaction](#blindtransaction)
-* [signTransaction](#signtransaction)
-* [signMessage](#signmessage)
-
+- [enable](#enable)
+- [disable](#disable)
+- [getNetwork](#getnetwork)
+- [getAddresses](#getaddresses)
+- [getNextAddress](#getnextaddress)
+- [getNextChangeAddress](#getnextchangeaddress)
+- [sendTransaction](#sendtransaction)
+- [blindTransaction](#blindtransaction)
+- [signTransaction](#signtransaction)
+- [signMessage](#signmessage)
 
 ### enable
 
@@ -65,6 +58,7 @@ marina.enable(): Promise<void>
 ```typescript
 marina.disable(): Promise<void>
 ```
+
 ### getNetwork
 
 ```typescript
@@ -85,7 +79,6 @@ marina.getNextAddress(): Promise<AddressInterface>
 
 ### getNextChangeAddress
 
-
 ```typescript
 marina.getNextChangeAddress(): Promise<AddressInterface>
 ```
@@ -98,13 +91,13 @@ marina.sendTransaction(recipientAddress: string, amountInSatoshis: number, asset
 
 ### blindTransaction
 
-```typescript 
+```typescript
 marina.blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
 
 ### signTransaction
 
-```typescript 
+```typescript
 marina.signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
 
@@ -114,29 +107,95 @@ marina.signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 marina.signMessage(message: string): Promise<SignedMessage>;
 ```
 
+### getCoins
+
+```typescript
+marina.getCoins(): Promise<Utxo[]>;
+```
+
+### getTransactions
+
+```typescript
+marina.getTransactions(): Promise<Transaction[]>;
+```
+
+### getBalances
+
+```typescript
+marina.getBalances(): Promise<Balance[]>;
+```
+
+### on
+
+```typescript
+marina.on(type: MarinaEventType, callback: (payload: any) => void): void;
+```
+
+_The callback's payload type depends on event type_
+
+| _Event type_   | NEW_UTXO | SPENT_UTXO               | ENABLED | DISABLED | NEW_TX        | NETWORK                 |
+| -------------- | -------- | ------------------------ | ------- | :------: | ------------- | ----------------------- |
+| _Payload type_ | `Utxo`   | `Outpoint` (txid + vout) | /       |    /     | `Transaction` | `string` (network name) |
+
 ## TypeScript specification
 
 ```typescript
-
-interface AddressInterface {
+export interface AddressInterface {
   confidentialAddress: string;
   blindingPrivateKey: string;
   derivationPath?: string;
 }
 
-interface SignedMessage {
+export interface SignedMessage {
   signature: SignatureBase64;
   address: NativeSegwitAddress;
 }
 
-type TransactionHex = string;
-type PsetBase64 = string;
-type SignatureBase64 = string;
-type NativeSegwitAddress = string;
+export enum TxStatusEnum {
+  Confirmed = 1,
+  Pending = 0,
+}
 
+export interface Transaction {
+  txId: string;
+  status: TxStatusEnum;
+  fee: number;
+  transfers: Array<{ asset: string; amount: number }>;
+  explorerURL: string;
+  blocktimeMs: number;
+}
 
+export interface Utxo {
+  txid: string;
+  vout: number;
+  asset?: string;
+  value?: number;
+}
 
-interface MarinaProvider {
+export interface Balance {
+  asset: {
+    assetHash: string;
+    ticker?: string;
+    name?: string;
+    precision: number;
+  };
+  amount: number;
+}
+
+export type MarinaEventType =
+  | "NEW_UTXO"
+  | "NEW_TX"
+  | "SPENT_UTXO"
+  | "ENABLED"
+  | "DISABLED"
+  | "NETWORK";
+
+export type TransactionHex = string;
+export type PsetBase64 = string;
+export type SignatureBase64 = string;
+export type NativeSegwitAddress = string;
+
+export interface MarinaProvider {
   enable(): Promise<void>;
 
   disable(): Promise<void>;
@@ -145,7 +204,7 @@ interface MarinaProvider {
 
   setAccount(account: number): Promise<void>;
 
-  getNetwork(): Promise<'liquid' | 'regtest'>;
+  getNetwork(): Promise<"liquid" | "regtest">;
 
   getAddresses(): Promise<AddressInterface[]>;
 
@@ -164,6 +223,13 @@ interface MarinaProvider {
   signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 
   signMessage(message: string): Promise<SignedMessage>;
-}
 
+  getCoins(): Promise<Utxo[]>;
+
+  getTransactions(): Promise<Transaction[]>;
+
+  getBalances(): Promise<Balance[]>;
+
+  on(type: MarinaEventType, callback: (payload: any) => void): void;
+}
 ```
