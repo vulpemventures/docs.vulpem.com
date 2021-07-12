@@ -36,6 +36,7 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 
 ## API
 
+- [isEnabled](#isEnabled)
 - [enable](#enable)
 - [disable](#disable)
 - [getNetwork](#getnetwork)
@@ -46,6 +47,11 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [blindTransaction](#blindtransaction)
 - [signTransaction](#signtransaction)
 - [signMessage](#signmessage)
+- [getTransactions](#getTransactions)
+- [getCoins](#getCoins)
+- [getBalances](#getBalances)
+- [on](#on)
+- [off](#off)
 
 ### isEnabled
 
