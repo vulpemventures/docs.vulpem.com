@@ -47,6 +47,12 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [signTransaction](#signtransaction)
 - [signMessage](#signmessage)
 
+### isEnabled
+
+```typescript
+marina.isEnabled(): Promise<boolean>
+```
+
 ### enable
 
 ```typescript
@@ -128,8 +134,18 @@ marina.getBalances(): Promise<Balance[]>;
 ### on
 
 ```typescript
-marina.on(type: MarinaEventType, callback: (payload: any) => void): void;
+marina.on(type: MarinaEventType, callback: (payload: any) => void): EventListenerID;
 ```
+
+> Returns a `string` unique ID using to identity the listener.
+
+### off
+
+```typescript
+marina.off(listenerId: EventListenerID): void;
+```
+
+> `off` stops the listener identified by `listenerId`.
 
 _The callback's payload type depends on event type_
 
@@ -194,6 +210,7 @@ export type TransactionHex = string;
 export type PsetBase64 = string;
 export type SignatureBase64 = string;
 export type NativeSegwitAddress = string;
+export type EventListenerID = string;
 
 export interface MarinaProvider {
   enable(): Promise<void>;
