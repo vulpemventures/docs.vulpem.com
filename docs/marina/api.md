@@ -153,11 +153,97 @@ marina.off(listenerId: EventListenerID): void;
 
 > `off` stops the listener identified by `listenerId`.
 
+## Marina events
+
+Marina emits events when the wallet state is changing. The user can capture these events using `marina.on`, and cancel the listeners with `marina.off`.
+
 _The callback's payload type depends on event type_
 
-| _Event type_   | NEW_UTXO | SPENT_UTXO               | ENABLED | DISABLED | NEW_TX        | NETWORK                 |
-| -------------- | -------- | ------------------------ | ------- | :------: | ------------- | ----------------------- |
-| _Payload type_ | `Utxo`   | `Outpoint` (txid + vout) | /       |    /     | `Transaction` | `string` (network name) |
+### NEW_UTXO
+
+`NEW_UTXO` is emitted when Marina fetches a new unspent output from explorer.
+
+| Event type | Payload type |
+| ---------- | ------------ |
+| "NEW_UTXO" | `Utxo`       |
+
+```typescript
+// print the utxo's txid each time Marina emits NEW_UTXO
+marina.on("NEW_UTXO", (payload: any) => console.log((payload as Utxo).txid));
+```
+
+### SPENT_UTXO
+
+`SPENT_UTXO` is emitted when an unspent output has been spent by any transaction.
+
+| Event type   | Payload type                      |
+| ------------ | --------------------------------- |
+| "SPENT_UTXO" | `{ txid: string; vout: number; }` |
+
+```typescript
+marina.on("SPENT_UTXO", (payload: any) => {
+  const { txid, vout } = payload;
+  console.log(`output with txid=${txid} and vout=${vout} has been spent`)
+}
+```
+
+### NEW_TX
+
+`NEW_TX` is emitted when Marina fetches a transaction from explorer.
+
+| Event type | Payload type  |
+| ---------- | ------------- |
+| "NEW_TX"   | `Transaction` |
+
+```typescript
+// print the tx's txid each time Marina emits NEW_TX
+marina.on("NEW_TX", (u: any) => console.log((u as Transaction).txid));
+```
+
+### ENABLED
+
+`ENABLED` is emitted when the active hostname is enabled by the user.
+
+| Event type | Payload type |
+| ---------- | ------------ |
+| "ENABLED"  | `undefined`  |
+
+```typescript
+marina.enable(); // this will open the enable popup. the user can accept or reject.
+marina.on("ENABLED", () => console.log("the user has accepted"));
+```
+
+### DISABLED
+
+`DISABLED` is emitted when the active hostname is disabled by the user.
+
+| Event type | Payload type |
+| ---------- | ------------ |
+| "DISABLED" | `undefined`  |
+
+```typescript
+marina.on("DISABLED", () =>
+  console.log("the current hostname is now disabled")
+);
+marina.disable(); // this will emit a "DISABLED" event.
+```
+
+### NETWORK
+
+The `NETWORK` event is emitted when the Marina's network config has changed.
+
+| Event type | Payload type            |
+| ---------- | ----------------------- |
+| "NETWORK"  | `string` (network name) |
+
+```typescript
+marina.on("NETWORK", (payload: string) => {
+  if (payload === "regtest") {
+    // the user has switched from "liquid" to "regtest".
+    console.log("regtest is boring");
+  }
+});
+```
 
 ## TypeScript specification
 
@@ -256,3 +342,5 @@ export interface MarinaProvider {
   on(type: MarinaEventType, callback: (payload: any) => void): void;
 }
 ```
+
+_Source_ : https://github.com/vulpemventures/marina-provider/blob/master/index.ts
