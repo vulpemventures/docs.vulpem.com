@@ -14,7 +14,9 @@ Welcome to Marina's Developer Documentation. This documentation is for learning 
 
 ## Blockchain
 
-Marina connects to `Blockstream.info` Electrs REST API and this allows you to get started without synchronizing a full node, while still providing the option to upgrade your security and use the Electrs REST server of your choice. In the future we will allow authenticated JSONRPC HTTP/1.x connection to your own Elements node.
+Marina connects to a remote Electrs instance and this allows you to get started without synchronizing a full node, while still providing the option to upgrade your security and use the Electrs server of your choice. The supported explorers are `Blockstream.info` and `Mempool.space`.
+
+In the future we will allow authenticated JSONRPC HTTP/1.x connection to your own Elements node.
 
 ## Wallet 
 
