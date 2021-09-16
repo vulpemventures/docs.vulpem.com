@@ -8,17 +8,16 @@ image: /img/marina_logo.svg
 We recommend that all web developers read from the [Getting started](getting-started) section and onward .
 :::
 
-Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions.
+Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions. 
+
+The `marina-provider` package provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
+
 
 ```javascript
-const marina = window.marina;
-if (marina) {
-  // From now on, this should always be true:
-  // marina === window.marina
-  initApp(marina); // initialize your app
-} else {
-  console.log("Please install Marina extension!");
-}
+import { detectProvider } from 'marina-provider';
+
+const marina = await detectProvider('marina');
+initApp(marina); // initialize your app
 ```
 
 ## Basics
@@ -35,6 +34,8 @@ The snippet at the top of this page is sufficient for detecting the provider.
 The provider API is all you need to create a full-featured Liquid powered web application.
 
 ## API
+
+### MarinaProvider
 
 - [isEnabled](#isenabled)
 - [isReady](#isready)
@@ -54,6 +55,10 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [getFeeAssets](#getfeeassets)
 - [on](#on)
 - [off](#off)
+
+### Utils
+
+- [detectProvider](#detectprovider)
 
 ### isEnabled
 
@@ -264,6 +269,18 @@ marina.on("NETWORK", (payload: string) => {
   }
 });
 ```
+
+## Utils
+
+### detectProvider
+
+The `detectProvider` function aims to fetch the providers injected by the browser extension.
+
+```typescript
+const myProvider = await detectProvider<ProviderType>('providerName', 10000); 
+const marina = await detectProvider<MarinaProvider>('marina'); // default timeout = 3000
+```
+> Under the hood, the function listens the `providerName#initialized` event emitted by the browser extension script.
 
 ## TypeScript specification
 
