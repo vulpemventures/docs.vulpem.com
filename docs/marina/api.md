@@ -37,6 +37,7 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 ## API
 
 - [isEnabled](#isenabled)
+- [isReady](#isready)
 - [enable](#enable)
 - [disable](#disable)
 - [getNetwork](#getnetwork)
@@ -59,6 +60,13 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 ```typescript
 marina.isEnabled(): Promise<boolean>
 ```
+
+### isReady
+
+```typescript
+marina.isReady(): Promise<boolean>
+```
+> Returns true if the user has already set up a wallet.
 
 ### enable
 
@@ -328,6 +336,8 @@ export interface MarinaProvider {
   disable(): Promise<void>;
 
   isEnabled(): Promise<boolean>;
+
+  isReady(): Promise<boolean>;
 
   setAccount(account: number): Promise<void>;
 
