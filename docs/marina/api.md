@@ -8,16 +8,19 @@ image: /img/marina_logo.svg
 We recommend that all web developers read from the [Getting started](getting-started) section and onward .
 :::
 
-Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions.
+Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions. 
+
+The [marina-provider](https://www.npmjs.com/package/marina-provider) package provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
+
 
 ```javascript
-const marina = window.marina;
-if (marina) {
-  // From now on, this should always be true:
-  // marina === window.marina
+import { detectProvider } from 'marina-provider';
+
+try {
+  const marina = await detectProvider('marina');
   initApp(marina); // initialize your app
-} else {
-  console.log("Please install Marina extension!");
+} catch (err) {
+  console.log('Please install Marina extension!');
 }
 ```
 
@@ -35,6 +38,8 @@ The snippet at the top of this page is sufficient for detecting the provider.
 The provider API is all you need to create a full-featured Liquid powered web application.
 
 ## API
+
+### MarinaProvider
 
 - [isEnabled](#isenabled)
 - [isReady](#isready)
@@ -54,6 +59,10 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [getFeeAssets](#getfeeassets)
 - [on](#on)
 - [off](#off)
+
+### Utils
+
+- [detectProvider](#detectprovider)
 
 ### isEnabled
 
@@ -265,111 +274,18 @@ marina.on("NETWORK", (payload: string) => {
 });
 ```
 
-## TypeScript specification
+## Utils
+
+### detectProvider
+
+The `detectProvider` function aims to fetch the providers injected by the browser extension.
 
 ```typescript
-export interface AddressInterface {
-  confidentialAddress: string;
-  blindingPrivateKey: string;
-  derivationPath?: string;
-}
-
-export interface SignedMessage {
-  signature: SignatureBase64;
-  address: NativeSegwitAddress;
-}
-
-export enum TxStatusEnum {
-  Confirmed = 1,
-  Pending = 0,
-}
-
-export interface Transaction {
-  txId: string;
-  status: TxStatusEnum;
-  fee: number;
-  transfers: Array<{ asset: string; amount: number }>;
-  explorerURL: string;
-  blocktimeMs: number;
-}
-
-export interface Utxo {
-  txid: string;
-  vout: number;
-  asset?: string;
-  value?: number;
-}
-
-export interface Balance {
-  asset: {
-    assetHash: string;
-    ticker?: string;
-    name?: string;
-    precision: number;
-  };
-  amount: number;
-}
-
-export interface Recipient {
-  address: string;
-  value: number; 
-  asset: string;
-}
-
-export type MarinaEventType =
-  | "NEW_UTXO"
-  | "NEW_TX"
-  | "SPENT_UTXO"
-  | "ENABLED"
-  | "DISABLED"
-  | "NETWORK";
-
-export type TransactionHex = string;
-export type PsetBase64 = string;
-export type SignatureBase64 = string;
-export type NativeSegwitAddress = string;
-export type EventListenerID = string;
-
-export interface MarinaProvider {
-  enable(): Promise<void>;
-
-  disable(): Promise<void>;
-
-  isEnabled(): Promise<boolean>;
-
-  isReady(): Promise<boolean>;
-
-  setAccount(account: number): Promise<void>;
-
-  getNetwork(): Promise<"liquid" | "regtest">;
-
-  getAddresses(): Promise<AddressInterface[]>;
-
-  getNextAddress(): Promise<AddressInterface>;
-
-  getNextChangeAddress(): Promise<AddressInterface>;
-
-  sendTransaction(
-    recipients: Recipient[],
-    feeAsset?: string,
-  ): Promise<TransactionHex>;
-
-  blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
-
-  signTransaction(pset: PsetBase64): Promise<PsetBase64>;
-
-  signMessage(message: string): Promise<SignedMessage>;
-
-  getCoins(): Promise<Utxo[]>;
-
-  getTransactions(): Promise<Transaction[]>;
-
-  getBalances(): Promise<Balance[]>;
-
-  on(type: MarinaEventType, callback: (payload: any) => void): void;
-
-  getFeeAssets(): Promise<string[]>;
-}
+const myProvider = await detectProvider<ProviderType>('providerName', 10000); 
+const marina = await detectProvider<MarinaProvider>('marina'); // default timeout = 3000
 ```
+> Under the hood, the function listens the `providerName#initialized` event emitted by the browser extension script.
 
-_Source_ : https://github.com/vulpemventures/marina-provider/blob/master/index.ts
+## TypeScript specification
+
+_MarinaProvider_ : https://github.com/vulpemventures/marina-provider/blob/master/src/index.ts
