@@ -36,7 +36,8 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 
 ## API
 
-- [isEnabled](#isEnabled)
+- [isEnabled](#isenabled)
+- [isReady](#isready)
 - [enable](#enable)
 - [disable](#disable)
 - [getNetwork](#getnetwork)
@@ -47,9 +48,10 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [blindTransaction](#blindtransaction)
 - [signTransaction](#signtransaction)
 - [signMessage](#signmessage)
-- [getTransactions](#getTransactions)
-- [getCoins](#getCoins)
-- [getBalances](#getBalances)
+- [getTransactions](#gettransactions)
+- [getCoins](#getcoins)
+- [getBalances](#getbalances)
+- [getFeeAssets](#getfeeassets)
 - [on](#on)
 - [off](#off)
 
@@ -58,6 +60,13 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 ```typescript
 marina.isEnabled(): Promise<boolean>
 ```
+
+### isReady
+
+```typescript
+marina.isReady(): Promise<boolean>
+```
+> Returns true if the user has already set up a wallet.
 
 ### enable
 
@@ -98,8 +107,11 @@ marina.getNextChangeAddress(): Promise<AddressInterface>
 ### sendTransaction
 
 ```typescript
-marina.sendTransaction(recipientAddress: string, amountInSatoshis: number, assetHash: string ): Promise<TransactionHex>
+marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<TransactionHex>
 ```
+
+`feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash. 
+If another asset hash is specified, Marina will use Liquid Taxi to pay fees. [getFeeAssets](#getFeeAssets) lets to know the assets supported as `feeAssetHash`.
 
 ### blindTransaction
 
@@ -136,6 +148,14 @@ marina.getTransactions(): Promise<Transaction[]>;
 ```typescript
 marina.getBalances(): Promise<Balance[]>;
 ```
+
+### getFeeAssets
+
+```typescript
+marina.getFeeAssets(): Promise<string[]>;
+```
+
+> Returns the list of assets that can be used to pay transaction fees.
 
 ### on
 
@@ -290,6 +310,12 @@ export interface Balance {
   amount: number;
 }
 
+export interface Recipient {
+  address: string;
+  value: number; 
+  asset: string;
+}
+
 export type MarinaEventType =
   | "NEW_UTXO"
   | "NEW_TX"
@@ -311,6 +337,8 @@ export interface MarinaProvider {
 
   isEnabled(): Promise<boolean>;
 
+  isReady(): Promise<boolean>;
+
   setAccount(account: number): Promise<void>;
 
   getNetwork(): Promise<"liquid" | "regtest">;
@@ -322,9 +350,8 @@ export interface MarinaProvider {
   getNextChangeAddress(): Promise<AddressInterface>;
 
   sendTransaction(
-    recipientAddress: string,
-    amountInSatoshis: number,
-    assetHash: string
+    recipients: Recipient[],
+    feeAsset?: string,
   ): Promise<TransactionHex>;
 
   blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
@@ -340,6 +367,8 @@ export interface MarinaProvider {
   getBalances(): Promise<Balance[]>;
 
   on(type: MarinaEventType, callback: (payload: any) => void): void;
+
+  getFeeAssets(): Promise<string[]>;
 }
 ```
 

@@ -61,11 +61,12 @@ const MarinaExample: React.FC<Props> = () => {
 
   const send = async () => {
     try {
-      const rawtx = await marina.sendTransaction(
-        recipient,
-        amount,
-        L_BTC[network]
-      );
+      const rawtx = await marina.sendTransaction([{
+        address: recipient,
+        value: amount,
+        asset: L_BTC[network]
+      }]);
+      
       console.log(rawtx);
       setTx(rawtx);
 

@@ -6,27 +6,22 @@ image: /img/marina_logo.svg
 
 ## Send to an address
 
-You can delegate Marina to create, fund, blind, sign and broadcast a Liquid transaction to a recipient. You do not need to know anything about current balance, although is suggetsed to retrieve and display the [balances](balances.md) in your application for better UX and to check beforehand for sufficient funds.
+You can delegate Marina to create, fund, blind, sign and broadcast a Liquid transaction to a recipient. You do not need to know anything about current balance, although is suggested to retrieve and display the [balances](balances.md) in your application for better UX and to check beforehand for sufficient funds.
 
 
 ```js
-// confidential address
-const recipient = "el1qq2c6wq4qr32vgnd5zz9kc3a9n5ancmwak66zt35vvxa7hyemqw773mtlp8z0mmwm6y5tfcq53qv5y9rfq83kqfwwquxvepy6g"
-
-// this is the L-BTC from Nigiri RegTest, which runs liquidregtest in elements.conf
-const BtcLiquidRegtest = "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225"
-
-// amount in satoshis
-const amount = 700000
-
 // Send 0.007 LBTC to an address
 const rawTxHex = await window.marina.sendTransaction(
-  recipient,
-  amount,
-  BtcLiquidRegtest,
+  [ 
+    { 
+      address: "el1qq2c6wq4qr32vgnd5zz9kc3a9n5ancmwak66zt35vvxa7hyemqw773mtlp8z0mmwm6y5tfcq53qv5y9rfq83kqfwwquxvepy6g", // the address of the recipient
+      asset: "5ac9f65c0efcc4775e0baec4ec03abdde22473cd3cf33c0419ca290e0751b225", // the asset to send
+      value: 700000 // amount always expressed in satoshis
+    }
+  ],
 );
 
-console.log(rawTxHex);
+console.log(rawTxHex); 
 ```
 
 This will prompt the user to allow blinding & signing a transaction.
