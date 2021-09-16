@@ -10,7 +10,7 @@ We recommend that all web developers read from the [Getting started](getting-sta
 
 Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions. 
 
-The `marina-provider` package provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
+The [marina-provider](https://www.npmjs.com/package/marina-provider) package provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
 
 
 ```javascript
