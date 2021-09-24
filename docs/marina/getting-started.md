@@ -18,13 +18,20 @@ You can review the full API for that object [here](api.md).
 
 ## Browser detection
 
-To verify if the browser is running Marina, copy and paste the code snippet below in the developer console of your web browser:
+To verify if the browser is running Marina, you can use the [marina-provider](https://www.npmjs.com/package/marina-provider) package that provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
 
-```js
-if (typeof window.marina !== 'undefined') {
-  console.log('Marina is installed!');
+
+```javascript
+import { detectProvider } from 'marina-provider';
+
+try {
+  const marina = await detectProvider('marina');
+  // now the window.marina provider is available for use!
+} catch (err) {
+  console.log('Please install Marina extension!');
 }
 ```
+
 
 You can review the full API for the `window.marina` object [here](api.md).
 
