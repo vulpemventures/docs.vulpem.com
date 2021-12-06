@@ -39,7 +39,7 @@ await window.marina.getNextChangeAddress();
 
 ## All addresses
 
-Retrieve all dervied confidential addresses with blidning keys till now
+Retrieve all derived confidential addresses with blinding keys till now
 ```js
 await window.marina.getAddresses();
 ```
