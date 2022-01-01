@@ -37,9 +37,9 @@ await window.marina.getNextChangeAddress();
 */
 ```
 
-## All addresses 
+## All addresses
 
-Retrieve all dervied confidential addresses with blidning keys till now
+Retrieve all derived confidential addresses with blinding keys till now
 ```js
 await window.marina.getAddresses();
 ```
@@ -65,10 +65,10 @@ const addrs = await window.marina.getAddresses();
 const utxos = await fetchAndUnblindUtxos(addrs, ESPLORA_API_URL);
 
 // It will return an array of unblinded utxos
-// we suggest to cache unblindData in order to speed-up 
+// we suggest to cache unblindData in order to speed-up
 // future transaction building and blinding.
 console.log(utxos);
-/* 
+/*
 [
   {
     txid: string;
@@ -78,7 +78,7 @@ console.log(utxos);
     prevout?: TxOutput;
     unblindData?: confidential.UnblindOutputResult;
   }
-] 
+]
 */
 ```
 
