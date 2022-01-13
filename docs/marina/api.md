@@ -8,7 +8,7 @@ image: /img/marina_logo.svg
 We recommend that all web developers read from the [Getting started](getting-started) section and onward .
 :::
 
-Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions. 
+Marina injects a global API into websites visited by its users at window.marina. This API allows websites to request users' Liquid addresses and blinding keys, read data about the blockchain the user is connected to, and suggest that the user sign messages and send transactions.
 
 The [marina-provider](https://www.npmjs.com/package/marina-provider) package provides a function `detectProvider` to inspect and fetch the `window.marina` provider.
 
@@ -116,10 +116,10 @@ marina.getNextChangeAddress(): Promise<AddressInterface>
 ### sendTransaction
 
 ```typescript
-marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<TransactionHex>
+marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<TransactionHash>
 ```
 
-`feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash. 
+`feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash.
 If another asset hash is specified, Marina will use Liquid Taxi to pay fees. [getFeeAssets](#getFeeAssets) lets to know the assets supported as `feeAssetHash`.
 
 ### blindTransaction
@@ -281,7 +281,7 @@ marina.on("NETWORK", (payload: string) => {
 The `detectProvider` function aims to fetch the providers injected by the browser extension.
 
 ```typescript
-const myProvider = await detectProvider<ProviderType>('providerName', 10000); 
+const myProvider = await detectProvider<ProviderType>('providerName', 10000);
 const marina = await detectProvider<MarinaProvider>('marina'); // default timeout = 3000
 ```
 > Under the hood, the function listens the `providerName#initialized` event emitted by the browser extension script.
