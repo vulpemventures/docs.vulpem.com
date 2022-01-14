@@ -146,7 +146,7 @@ const MarinaExample: React.FC<Props> = () => {
               txHash.length > 0 &&
               <>
                 <p>
-                  {txHash.substring(0, 20) + "..." + txHash.substring((txHash.length - 20), txHash.length)}
+                  {txHash}
                 </p>
                 <button
                   onClick={() => copy(txHash)}
