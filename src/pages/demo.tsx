@@ -20,7 +20,6 @@ const MarinaExample: React.FC<Props> = () => {
   const [connected, setConnected] = useState(false);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState(0);
-  const [tx, setTx] = useState('');
   const [network, setNetwork] = useState<'liquid' | 'regtest'>('liquid');
   const [error, setError] = useState('');
   const [txHash, setTxHash] = useState('');
@@ -61,14 +60,14 @@ const MarinaExample: React.FC<Props> = () => {
 
   const send = async () => {
     try {
-      const rawtx = await marina.sendTransaction([{
+      const txHash = await marina.sendTransaction([{
         address: recipient,
         value: amount,
         asset: L_BTC[network]
       }]);
-      
-      console.log(rawtx);
-      setTx(rawtx);
+
+      console.log(txHash);
+      setTxHash(txHash);
 
     } catch (e) {
       console.error(e);
@@ -144,13 +143,13 @@ const MarinaExample: React.FC<Props> = () => {
               Send LBTC
             </button>
             {
-              tx.length > 0 &&
+              txHash.length > 0 &&
               <>
                 <p>
-                  {tx.substring(0, 20) + "..." + tx.substring((tx.length - 20), tx.length)}
+                  {txHash}
                 </p>
                 <button
-                  onClick={() => copy(tx)}
+                  onClick={() => copy(txHash)}
                   style={{
                     height: '50px',
                     width: '350px'
