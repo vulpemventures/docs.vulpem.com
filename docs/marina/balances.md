@@ -19,6 +19,7 @@ await window.marina.getNextAddress();
   confidentialAddress: string;
   blindingPrivateKey: string;
   derivationPath?: string;
+  publicKey?: string;
 }
 */
 ```
@@ -33,6 +34,7 @@ await window.marina.getNextChangeAddress();
   confidentialAddress: string;
   blindingPrivateKey: string;
   derivationPath?: string;
+  publicKey?: string;
 }
 */
 ```
