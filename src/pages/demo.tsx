@@ -22,7 +22,7 @@ const MarinaExample: React.FC<Props> = () => {
   const [amount, setAmount] = useState(0);
   const [network, setNetwork] = useState<'liquid' | 'regtest'>('liquid');
   const [error, setError] = useState('');
-  const [txHash, setTxHash] = useState('');
+  const [txId, setTxId] = useState('');
 
   if (typeof window === "undefined") {
     return null;
@@ -60,14 +60,14 @@ const MarinaExample: React.FC<Props> = () => {
 
   const send = async () => {
     try {
-      const txHash = await marina.sendTransaction([{
+      const { txid, hex } = await marina.sendTransaction([{
         address: recipient,
         value: amount,
         asset: L_BTC[network]
       }]);
 
-      console.log(txHash);
-      setTxHash(txHash);
+      console.log(txid, hex);
+      setTxId(txid);
 
     } catch (e) {
       console.error(e);
@@ -143,13 +143,13 @@ const MarinaExample: React.FC<Props> = () => {
               Send LBTC
             </button>
             {
-              txHash.length > 0 &&
+              txId.length > 0 &&
               <>
                 <p>
-                  {txHash}
+                  {txId}
                 </p>
                 <button
-                  onClick={() => copy(txHash)}
+                  onClick={() => copy(txId)}
                   style={{
                     height: '50px',
                     width: '350px'

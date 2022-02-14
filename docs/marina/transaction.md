@@ -11,7 +11,7 @@ You can delegate Marina to create, fund, blind, sign and broadcast a Liquid tran
 
 ```js
 // Send 0.007 LBTC to an address
-const txHash = await window.marina.sendTransaction(
+const { txid, hex } = await window.marina.sendTransaction(
   [
     {
       address: "el1qq2c6wq4qr32vgnd5zz9kc3a9n5ancmwak66zt35vvxa7hyemqw773mtlp8z0mmwm6y5tfcq53qv5y9rfq83kqfwwquxvepy6g", // the address of the recipient
@@ -21,7 +21,7 @@ const txHash = await window.marina.sendTransaction(
   ],
 );
 
-console.log(txHash);
+console.log(txid, hex);
 ```
 
 This will prompt the user to allow blinding & signing a transaction.

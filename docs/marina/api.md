@@ -116,7 +116,7 @@ marina.getNextChangeAddress(): Promise<AddressInterface>
 ### sendTransaction
 
 ```typescript
-marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<TransactionID>
+marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<SentTransaction>
 ```
 
 `feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash.
