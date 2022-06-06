@@ -102,7 +102,7 @@ Switch to account with ID = `accountID` if it exists. By default, current select
 ```typescript
 marina.importTemplate(template: { type: string; template: any }, changeTemplate: { type: string; template: any }): Promise<void>;
 ```
-Set up the script template of the current selected account.
+Configure the script template of the current selected account. The script template is used to generate the script of the account's addresses.
 If `changeTemplate` is undefined, `template` will be used as external and internal script generator.
 
 ### isEnabled
@@ -149,7 +149,6 @@ Returns the addresses of the accounts selected by `accountIDs`. If undefined, re
 ```typescript
 marina.getNextAddress(): Promise<AddressInterface>
 ```
-
 Generate and persist in Marina a new external address for the current selected account.
 
 ### getNextChangeAddress
@@ -157,7 +156,6 @@ Generate and persist in Marina a new external address for the current selected a
 ```typescript
 marina.getNextChangeAddress(): Promise<AddressInterface>
 ```
-
 Generate and persist in Marina a new internal address for the current selected account.
 
 ### sendTransaction
@@ -165,7 +163,6 @@ Generate and persist in Marina a new internal address for the current selected a
 ```typescript
 marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string): Promise<SentTransaction>
 ```
-
 `feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash.
 If another asset hash is specified, Marina will use Liquid Taxi to pay fees. [getFeeAssets](#getFeeAssets) lets to know the assets supported as `feeAssetHash`.
 
@@ -182,15 +179,13 @@ marina.blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```typescript
 marina.signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
-
-Marina will try to sign all signable (own by at least one of the account) inputs of the `pset`.
+Marina will try to sign all the inputs of the transaction if it knows the blinding and signing keys of the spent outpoint.
 
 ### signMessage
 
 ```typescript
 marina.signMessage(message: string): Promise<SignedMessage>;
 ```
-
 Sign a message using the private key of the current selected account.
 
 ### getCoins
@@ -198,7 +193,6 @@ Sign a message using the private key of the current selected account.
 ```typescript
 marina.getCoins(accountIDs?: AccountID[]): Promise<Utxo[]>;
 ```
-
 Returns the UTXOs of the accounts selected by `accountIDs`. If undefined, returns the UTXOs of all accounts.
 
 ### getTransactions
@@ -206,7 +200,6 @@ Returns the UTXOs of the accounts selected by `accountIDs`. If undefined, return
 ```typescript
 marina.getTransactions(accountIDs?: AccountID[]): Promise<Transaction[]>;
 ```
-
 Returns the transactions of the accounts selected by `accountIDs`. If undefined, returns the transactions of all accounts.
 
 ### getBalances
@@ -214,7 +207,6 @@ Returns the transactions of the accounts selected by `accountIDs`. If undefined,
 ```typescript
 marina.getBalances(accountIDs?: AccountID[]): Promise<Balance[]>;
 ```
-
 Returns the balances of the accounts selected by `accountIDs`. If undefined, returns the balances of all accounts.
 
 ### getFeeAssets
@@ -222,7 +214,6 @@ Returns the balances of the accounts selected by `accountIDs`. If undefined, ret
 ```typescript
 marina.getFeeAssets(): Promise<string[]>;
 ```
-
 Returns the list of assets that can be used to pay transaction fees.
 
 ### on
@@ -230,7 +221,6 @@ Returns the list of assets that can be used to pay transaction fees.
 ```typescript
 marina.on(type: MarinaEventType, callback: (payload: any) => void): EventListenerID;
 ```
-
 Returns a `string` unique ID using to identity the listener.
 
 ### off
@@ -244,9 +234,8 @@ marina.off(listenerId: EventListenerID): void;
 ```typescript
 marina.reloadCoins(accountIDs?: AccountID[]): Promise<void>;
 ```
-
-Marina is running update taskes in background. However, sometimes u want to directly reload the utxos/txs state for a specific account.
-reloadCoins let you launch UPDATE_TASK for the `accountIDs` accounts. If undefined, reloadCoins will be launched for all accounts.
+Marina is running update tasks in the background using `UPDATE_TASK`. However, if you wish to reload the utxos/txs state for a specific account, you may use that method.
+reloadCoins lets you launch UPDATE_TASK for the `accountIDs` accounts. If not specified, reloadCoins will be launched for all accounts.
 
 `off` stops the listener identified by `listenerId`.
 
