@@ -228,6 +228,7 @@ Returns a `string` unique ID using to identity the listener.
 ```typescript
 marina.off(listenerId: EventListenerID): void;
 ```
+`off` stops the listener identified by `listenerId`.
 
 ### reloadCoins
 
@@ -237,7 +238,6 @@ marina.reloadCoins(accountIDs?: AccountID[]): Promise<void>;
 Marina is running update tasks in the background using `UPDATE_TASK`. However, if you wish to reload the utxos/txs state for a specific account, you may use that method.
 reloadCoins lets you launch UPDATE_TASK for the `accountIDs` accounts. If not specified, reloadCoins will be launched for all accounts.
 
-`off` stops the listener identified by `listenerId`.
 
 ## Marina events
 
