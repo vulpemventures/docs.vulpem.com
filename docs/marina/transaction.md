@@ -35,8 +35,6 @@ If the prompt is accepted, the transaction will be blinded, signed and broadcast
 
 Developers can build custom transactions using the unspents of the exposed addresses and can delegate Marina to sign with the user consent.
 
-
-
 ```js
 import { Psbt, networks, BlindingDataLike } from 'liquidjs-lib';
 
@@ -55,6 +53,7 @@ psbt.addOutput({
 // Let's blind all the outputs. The order is important (same of output and some blinding key)
 // The marina blinding private key is an hex string, we need to pass to Buffer.
 await psbt.blindOutputs(
+  Psbt.ECCKeysGenerator(ecc),
   [
     Buffer.from(blindingPrivateKeyOfMarinaInput, 'hex')
   ],
