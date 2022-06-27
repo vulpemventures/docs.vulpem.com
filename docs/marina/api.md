@@ -39,10 +39,16 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 
 ## API
 
+
+
 ### MarinaProvider
 
 - [isEnabled](#isenabled)
 - [isReady](#isready)
+- [getAccountInfo](#getaccountinfo)
+- [useAccount](#useaccount)
+- [createAccount](#createaccount)
+- [importTemplate](#importtemplate)
 - [enable](#enable)
 - [disable](#disable)
 - [getNetwork](#getnetwork)
@@ -57,12 +63,47 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [getCoins](#getcoins)
 - [getBalances](#getbalances)
 - [getFeeAssets](#getfeeassets)
+- [reloadCoins](#reloadcoins)
 - [on](#on)
 - [off](#off)
 
 ### Utils
 
 - [detectProvider](#detectprovider)
+
+### createAccount
+
+```typescript
+marina.createAccount(accountID: AccountID): Promise<void>;
+``` 
+Open a popup, ask the password locking the marina private key.
+If the user accepts, marina will create a new account.
+
+### getAccountInfo
+
+```typescript
+marina.getAccountInfo(accountID: AccountID): Promise<AccountInfo>;
+```
+Get the account info of the account `accountID` if it exists.
+All accounts include at least the following informations:
+* `accountID`: the account ID
+* `masterPublicKey`: the master public key of the account
+* `isReady`: whether the account is ready to use (i.e the user has set up the account's template(s)), "mainAccount" is always ready.
+
+### useAccount
+
+```typescript
+marina.useAccount(accountID: AccountID): Promise<void>;
+```
+Switch to account with ID = `accountID` if it exists. By default, current selected account is always "mainAccount".
+
+### importTemplate
+
+```typescript
+marina.importTemplate(template: { type: string; template: any }, changeTemplate: { type: string; template: any }): Promise<void>;
+```
+Configure the script template of the current selected account. The script template is used to generate the script of the account's addresses.
+If `changeTemplate` is undefined, `template` will be used as external and internal script generator.
 
 ### isEnabled
 
@@ -92,33 +133,36 @@ marina.disable(): Promise<void>
 ### getNetwork
 
 ```typescript
-marina.getNetwork(): Promise<'liquid' | 'regtest'>
+marina.getNetwork(): Promise<'liquid' | 'testnet' | 'regtest'>
 ```
 
 ### getAddresses
 
 ```typescript
-marina.getAddresses(): Promise<AddressInterface[]>
+marina.getAddresses(accountIDs?: AccountID[]): Promise<AddressInterface[]>
 ```
+
+Returns the addresses of the accounts selected by `accountIDs`. If undefined, returns the addresses of all accounts.
 
 ### getNextAddress
 
 ```typescript
 marina.getNextAddress(): Promise<AddressInterface>
 ```
+Generate and persist in Marina a new external address for the current selected account.
 
 ### getNextChangeAddress
 
 ```typescript
 marina.getNextChangeAddress(): Promise<AddressInterface>
 ```
+Generate and persist in Marina a new internal address for the current selected account.
 
 ### sendTransaction
 
 ```typescript
-marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string ): Promise<SentTransaction>
+marina.sendTransaction(recipients: Recipient[], feeAssetHash?: string): Promise<SentTransaction>
 ```
-
 `feeAssetHash` is an optional parameter. The default value is the network's L-BTC asset hash.
 If another asset hash is specified, Marina will use Liquid Taxi to pay fees. [getFeeAssets](#getFeeAssets) lets to know the assets supported as `feeAssetHash`.
 
@@ -128,59 +172,72 @@ If another asset hash is specified, Marina will use Liquid Taxi to pay fees. [ge
 marina.blindTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
 
+> blindTransaction is not implemented yet.
+
 ### signTransaction
 
 ```typescript
 marina.signTransaction(pset: PsetBase64): Promise<PsetBase64>;
 ```
+Marina will try to sign all the inputs of the transaction if it knows the blinding and signing keys of the spent outpoint.
 
 ### signMessage
 
 ```typescript
 marina.signMessage(message: string): Promise<SignedMessage>;
 ```
+Sign a message using the private key of the current selected account.
 
 ### getCoins
 
 ```typescript
-marina.getCoins(): Promise<Utxo[]>;
+marina.getCoins(accountIDs?: AccountID[]): Promise<Utxo[]>;
 ```
+Returns the UTXOs of the accounts selected by `accountIDs`. If undefined, returns the UTXOs of all accounts.
 
 ### getTransactions
 
 ```typescript
-marina.getTransactions(): Promise<Transaction[]>;
+marina.getTransactions(accountIDs?: AccountID[]): Promise<Transaction[]>;
 ```
+Returns the transactions of the accounts selected by `accountIDs`. If undefined, returns the transactions of all accounts.
 
 ### getBalances
 
 ```typescript
-marina.getBalances(): Promise<Balance[]>;
+marina.getBalances(accountIDs?: AccountID[]): Promise<Balance[]>;
 ```
+Returns the balances of the accounts selected by `accountIDs`. If undefined, returns the balances of all accounts.
 
 ### getFeeAssets
 
 ```typescript
 marina.getFeeAssets(): Promise<string[]>;
 ```
-
-> Returns the list of assets that can be used to pay transaction fees.
+Returns the list of assets that can be used to pay transaction fees.
 
 ### on
 
 ```typescript
 marina.on(type: MarinaEventType, callback: (payload: any) => void): EventListenerID;
 ```
-
-> Returns a `string` unique ID using to identity the listener.
+Returns a `string` unique ID using to identity the listener.
 
 ### off
 
 ```typescript
 marina.off(listenerId: EventListenerID): void;
 ```
+`off` stops the listener identified by `listenerId`.
 
-> `off` stops the listener identified by `listenerId`.
+### reloadCoins
+
+```typescript
+marina.reloadCoins(accountIDs?: AccountID[]): Promise<void>;
+```
+Marina is running update tasks in the background using `UPDATE_TASK`. However, if you wish to reload the utxos/txs state for a specific account, you may use that method.
+reloadCoins lets you launch UPDATE_TASK for the `accountIDs` accounts. If not specified, reloadCoins will be launched for all accounts.
+
 
 ## Marina events
 
