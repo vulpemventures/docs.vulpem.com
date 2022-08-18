@@ -241,9 +241,16 @@ reloadCoins lets you launch UPDATE_TASK for the `accountIDs` accounts. If not sp
 
 ## Marina events
 
-Marina emits events when the wallet state is changing. The user can capture these events using `marina.on`, and cancel the listeners with `marina.off`.
+Marina emits events when the wallet state changes. The user can capture these events using `marina.on`, and cancel the listeners with `marina.off`.
 
-_The callback's payload type depends on event type_
+_The callback's payload 'data' prop depends on event type:_
+
+```typescript
+interface MarinaEvent {
+  accountID?: string;
+  data: any;
+}
+```
 
 ### NEW_UTXO
 
@@ -251,39 +258,44 @@ _The callback's payload type depends on event type_
 
 | Event type | Payload type                                   |
 | ---------- | ---------------------------------------------- |
-| "NEW_UTXO" | `{ utxo: UnblindedOutput; accountID: string }` |
+| "NEW_UTXO" | `{ accountID: string; data: UnblindedOutput }` |
 
 ```typescript
-// print the utxo's txid each time Marina emits NEW_UTXO
-marina.on("NEW_UTXO", (payload: any) => console.log((payload as Utxo).txid));
+marina.on("NEW_UTXO", ({ accountID, data }: MarinaEvent) => {
+  const { txid, vout } = data;
+  console.log(`new utxo ${txid}:${vout} for account ${accountID}`);
+})
 ```
 
 ### SPENT_UTXO
 
 `SPENT_UTXO` is emitted when an unspent output has been spent by any transaction.
 
-| Event type   | Payload type                            |
-| ------------ | --------------------------------------- |
-| "SPENT_UTXO" | `{ utxo: Outpoint; accountID: string }` |
+| Event type   | Payload type                                   |
+| ------------ | ---------------------------------------------- |
+| "SPENT_UTXO" | `{ accountID: string; data: UnblindedOutput }` |
 
 ```typescript
-marina.on("SPENT_UTXO", (payload: any) => {
-  const { txid, vout } = payload;
-  console.log(`output with txid=${txid} and vout=${vout} has been spent`)
-}
+marina.on("SPENT_UTXO", ({ accountID, data }: MarinaEvent) => {
+  const { txid, vout } = data;
+  console.log(`output ${txid}:${vout} has been spent by account ${accountID}`);
+})
 ```
 
 ### NEW_TX
 
 `NEW_TX` is emitted when Marina fetches a transaction from explorer.
 
-| Event type | Payload type                             |
-| ---------- | ---------------------------------------- |
-| "NEW_TX"   | `{ tx: Transaction; accountID: string }` |
+| Event type | Payload type                               |
+| ---------- | ------------------------------------------ |
+| "NEW_TX"   | `{ accountID: string; data: Transaction }` |
 
 ```typescript
 // print the tx's txid each time Marina emits NEW_TX
-marina.on("NEW_TX", (u: any) => console.log((u as Transaction).txid));
+marina.on("NEW_TX", ({ accountID, data }: MarinaEvent) => {
+  const { txId } = data;
+  console.log(`new tx ${txId} for account ${accountID}`);
+})
 ```
 
 ### ENABLED
@@ -292,7 +304,7 @@ marina.on("NEW_TX", (u: any) => console.log((u as Transaction).txid));
 
 | Event type | Payload type |
 | ---------- | ------------ |
-| "ENABLED"  | `undefined`  |
+| "ENABLED"  | `{ data: { hostname: string; network: NetworkString } }`  |
 
 ```typescript
 marina.enable(); // this will open the enable popup. the user can accept or reject.
@@ -303,28 +315,26 @@ marina.on("ENABLED", () => console.log("the user has accepted"));
 
 `DISABLED` is emitted when the active hostname is disabled by the user.
 
-| Event type | Payload type |
-| ---------- | ------------ |
-| "DISABLED" | `undefined`  |
+| Event type | Payload type                                              |
+| ---------- | --------------------------------------------------------- |
+| "DISABLED" | `{ data: { hostname: string; network: NetworkString } }`  |
 
 ```typescript
-marina.on("DISABLED", () =>
-  console.log("the current hostname is now disabled")
-);
 marina.disable(); // this will emit a "DISABLED" event.
+marina.on("DISABLED", () => console.log("the current hostname is now disabled"));
 ```
 
 ### NETWORK
 
 The `NETWORK` event is emitted when the Marina's network config has changed.
 
-| Event type | Payload type            |
-| ---------- | ----------------------- |
-| "NETWORK"  | `string` (network name) |
+| Event type | Payload type                      |
+| ---------- | --------------------------------- |
+| "NETWORK"  | `{ data: NetworkString }` (network name) |
 
 ```typescript
-marina.on("NETWORK", (payload: string) => {
-  if (payload === "regtest") {
+marina.on("NETWORK", ({ data }: MarinaEvent) => {
+  if (data === "regtest") {
     // the user has switched from "liquid" to "regtest".
     console.log("regtest is boring");
   }
