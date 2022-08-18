@@ -75,7 +75,7 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 
 ```typescript
 marina.createAccount(accountID: AccountID): Promise<void>;
-``` 
+```
 Open a popup, ask the password locking the marina private key.
 If the user accepts, marina will create a new account.
 
@@ -249,9 +249,9 @@ _The callback's payload type depends on event type_
 
 `NEW_UTXO` is emitted when Marina fetches a new unspent output from explorer.
 
-| Event type | Payload type |
-| ---------- | ------------ |
-| "NEW_UTXO" | `Utxo`       |
+| Event type | Payload type                                   |
+| ---------- | ---------------------------------------------- |
+| "NEW_UTXO" | `{ utxo: UnblindedOutput; accountID: string }` |
 
 ```typescript
 // print the utxo's txid each time Marina emits NEW_UTXO
@@ -262,9 +262,9 @@ marina.on("NEW_UTXO", (payload: any) => console.log((payload as Utxo).txid));
 
 `SPENT_UTXO` is emitted when an unspent output has been spent by any transaction.
 
-| Event type   | Payload type                      |
-| ------------ | --------------------------------- |
-| "SPENT_UTXO" | `{ txid: string; vout: number; }` |
+| Event type   | Payload type                            |
+| ------------ | --------------------------------------- |
+| "SPENT_UTXO" | `{ utxo: Outpoint; accountID: string }` |
 
 ```typescript
 marina.on("SPENT_UTXO", (payload: any) => {
@@ -277,9 +277,9 @@ marina.on("SPENT_UTXO", (payload: any) => {
 
 `NEW_TX` is emitted when Marina fetches a transaction from explorer.
 
-| Event type | Payload type  |
-| ---------- | ------------- |
-| "NEW_TX"   | `Transaction` |
+| Event type | Payload type                             |
+| ---------- | ---------------------------------------- |
+| "NEW_TX"   | `{ tx: Transaction; accountID: string }` |
 
 ```typescript
 // print the tx's txid each time Marina emits NEW_TX
