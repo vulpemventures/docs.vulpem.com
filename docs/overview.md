@@ -8,3 +8,4 @@ Welcome to the Vulpem Ventures documentation.
 
 * [Marina](marina/introduction.md)
 * [Nigiri](nigiri/introduction.md)
+* [Taxi](taxi/introduction.md)
