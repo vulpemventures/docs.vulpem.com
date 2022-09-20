@@ -31,7 +31,6 @@ module.exports = {
        label: 'Taxi',
        items: [
          'taxi/introduction',
-         'taxi/getting-started',
          'taxi/topup-with-asset'
        ]
      },
