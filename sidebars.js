@@ -26,14 +26,15 @@ module.exports = {
         'nigiri/nutrition-facts'
       ]
     },
-    /*  {
+    {
        type: 'category',
        label: 'Taxi',
        items: [
-         'taxi/introduction'
+         'taxi/introduction',
+         'taxi/topup-with-asset'
        ]
      },
-     {
+     /* {
        type: 'category',
        label: 'LDK',
        items: [
