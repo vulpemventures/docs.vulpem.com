@@ -45,25 +45,26 @@ async function main() {
 main();
 ```
 
-To request a topup you need to specify the service fee asset, an approximatively estimation of the size of your tx (take into account that Taxi always adds 1 input, 1 output and the fee output to it) and the sats/vByte ratio expressed in mSats/vB (`1 sats/vB = 1000 mSats/vB`).  
+To request a topup you need to specify the service fee asset, an approximate estimation of the size of your tx (take into account that Taxi always adds 1 input, 1 output and the fee output to it) and the sats/vByte ratio expressed in mSats/vB (`1 sats/vB = 1000 mSats/vB`).
 
 ```js
 const fetchTopupWithAsset = async (targetAsset) => {
-  const { data, status } = await axios.post(
-    `${taxiBaseUrl}/v1/asset/topup`,
-    { assetHash: targetAsset, estimatedTxSize: 300, millisatPerByte: 100 }
-  );
+  const { data, status } = await axios.post(`${taxiBaseUrl}/v1/asset/topup`, {
+    assetHash: targetAsset,
+    estimatedTxSize: 300,
+    millisatPerByte: 100,
+  });
   if (status !== 200) {
     throw new Error(data.message);
   }
   return data;
-}
+};
 
 async function main() {
   try {
     const topup = await fetchTopupWithAsset(usdt);
     console.log('Topup details:', topup);
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }
@@ -93,12 +94,11 @@ The response object returned by the HTTP JSON endpoint is like the following:
 }
 ```
 
-* `topup.topupId` is the id of the topup that Taxi uses internally to univoquely idenitfy it.
-* `topup.partial` is the pset created by Taxi to which you can add inputs and outputs to transfer your funds. The tx contains exactly 1 LBTC input and 2 outputs. The input is entirely spent by the fee output. The maximum final tx size, or the number of inputs and outputs you can add to it, depends on the fee amount and the sats/vByte ration you passed in the request. The second output is the service fee one, that you must pay with your funds.
-* `expiry` is the unix timestamp of the expiration date for the topup. After that date, if Taxi doesn't see the topup tx included in blockchain, it takes care of creating another tx and transfer the same input to one of its addresses. Any later attempt to broadcast the topup tx fails because Taxi's input has already been spent.
-* `assetHash` is the service fee asset, exactly the one passed in the request object.
-* `assetAmount` is the service fee amount that you must pay with your own funds.
-* `inBlindingData` is the list of unblinded data of the confidential inputs added by Taxi to the topup tx (always 1 tx input, therfore 1 entry). Includes the unblinded asset, value and relative blinders. Note that the blinders are encoded in bas64 std encoding instead of "normal" hex encoding just because this is the standard format for the representation of raw bytes in HTTP JSON objects.
-
+- `topup.topupId` is the id of the topup that Taxi uses internally to uniquely identify it.
+- `topup.partial` is the pset created by Taxi to which you can add inputs and outputs to transfer your funds. The tx contains exactly 1 LBTC input and 2 outputs. The input is entirely spent by the fee output. The maximum final tx size, or the number of inputs and outputs you can add to it, depends on the fee amount and the sats/vByte ratio you passed in the request. The second output is the service fee, that you must pay with your funds.
+- `expiry` is the unix timestamp of the expiration date for the topup. After that date, if Taxi doesn't see the topup tx included in blockchain, it takes care of creating another tx and transfer the same input to one of its addresses. Any later attempt to broadcast the topup tx fails because Taxi's input has already been spent.
+- `assetHash` is the service fee asset, exactly the one passed in the request object.
+- `assetAmount` is the service fee amount that you must pay with your own funds.
+- `inBlindingData` is the list of unblinded data of the confidential inputs added by Taxi to the topup tx (always 1 tx input, therefore 1 entry). Includes the unblinded asset, value and relative blinders. Note that the blinders are encoded in base64 standard encoding instead of "normal" hex encoding, just because this is the standard format for the representation of raw bytes in HTTP JSON objects.
 
 The complete version of the tutorial with instructions to run a live demo can be found on [Github](https://github.com/vulpemventures/taxi-tutorial).
