@@ -137,7 +137,7 @@ Ask the user to grant permissions to the website to access his wallet. It will o
 marina.disable(): Promise<void>
 ```
 
-Disable the website to access the user's wallet. It does not open any popup and does not need user interaction.
+Deny the website to access the user's wallet. It does not open any popup and does not need user interaction.
 
 ### getNetwork
 
