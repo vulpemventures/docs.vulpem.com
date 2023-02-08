@@ -10,7 +10,7 @@ Marina fully supports Ionio and allows you to derive taproot addresses embedding
 
 ## Create an Ionio account
 
-First of all, you need to create an Ionio account. This is a special type of account expecting a Ionio Artifact as input to derive a new address.
+First of all, you need to create a Ionio account. This is a special type of account expecting an Artifact as input to derive a new address.
 
 ```js
 import { AccountType } from 'marina-provider';
