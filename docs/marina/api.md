@@ -129,7 +129,7 @@ Returns whether the user has already set up a wallet.
 marina.enable(): Promise<void>
 ```
 
-Ask the user to grant permission to the website to access their wallet. It will open a popup and wait for the user response.
+Ask the user to grant permissions to the website to access his wallet. It will open a popup and wait for the user's response.
 
 ### disable
 
