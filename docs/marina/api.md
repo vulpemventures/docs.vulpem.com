@@ -78,7 +78,7 @@ If the user accepts, marina will create a new account.
 
 Account types are:
  * `AccountType.P2WPKH`: a standard segwit v0 account (default)
- * `AccountType.Ionio`: an account using [Ionio](https://ionio-lang.org/) Artifact to generate taproot script.
+ * `AccountType.Ionio`: account using [Ionio](https://ionio-lang.org/) artifacts to generate taproot scripts.
 
 :::tip
 All accounts are *confidential* and generates blinding keys for each script according to [SLIP77](https://github.com/satoshilabs/slips/blob/master/slip-0077.md).
