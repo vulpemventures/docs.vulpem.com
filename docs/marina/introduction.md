@@ -32,5 +32,5 @@ All the main accounts are confidential P2WPKH (native segwit).
 The "mainAccountLegacy" is not used by Marina extension to receive coins. It is only used to restore and spend the balance of legacy accounts created with the old version of Marina. 
 :::
 
-Marina lets user to create additional custom accounts. In order to be restorable, all accounts (except main ones) derivation path are deterministic and depends on the __account name__. Marina is using [SLIP13](https://github.com/satoshilabs/slips/blob/master/slip-0013.md) to derive the account path from the account name.
+Marina let's you create additional custom accounts and uses [SLIP13](https://github.com/satoshilabs/slips/blob/master/slip-0013.md) to generate the derivation path directly from an account name.
 
