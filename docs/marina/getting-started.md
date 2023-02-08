@@ -47,7 +47,7 @@ You can review the full API for the `window.marina` object [here](api.md).
 
 ## Connect to outside world
 
-Marina is a Liquid wallet running in your browser. It connects to an [ElectrumX](https://electrumx.readthedocs.io/) Liquid instance. Marina is using the WebSocket protocol to connect to the ElectrumX server. Marina use the Blockstream's ElectrumX server by default. You can change the endpoint in the settings/explorer tab of your extension.
+Marina connects to Blockstream's [ElectrumX](https://electrumx.readthedocs.io/) server via WebSocket by default. You can customize the WS endpoint in the settings/explorer tab of the extension.
 
 ### Running in RegTest
 
