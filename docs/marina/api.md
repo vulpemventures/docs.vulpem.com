@@ -121,7 +121,7 @@ If this returns false, some methods will throw an error.
 
 ```typescript
 marina.isReady(): Promise<boolean>
-Returns true if the user has already set up a wallet.
+Returns whether the user has already set up a wallet.
 
 ### enable
 
