@@ -77,7 +77,7 @@ Open a popup, ask the password locking the marina private key.
 If the user accepts, marina will create a new account.
 
 Account types are:
- * `AccountType.P2WPKH`: a standard segwit v0 account (default)
+ * `AccountType.P2WPKH`: native segwit v0 account (default)
  * `AccountType.Ionio`: account using [Ionio](https://ionio-lang.org/) artifacts to generate taproot scripts.
 
 :::tip
