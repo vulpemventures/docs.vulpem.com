@@ -81,7 +81,7 @@ Account types are:
  * `AccountType.Ionio`: account using [Ionio](https://ionio-lang.org/) artifacts to generate taproot scripts.
 
 :::tip
-All accounts are *confidential* and generates blinding keys for each script according to [SLIP77](https://github.com/satoshilabs/slips/blob/master/slip-0077.md).
+All accounts are *confidential* and generate blinding keys for each script according to [SLIP77](https://github.com/satoshilabs/slips/blob/master/slip-0077.md).
 :::
 
 ### getAccountInfo
