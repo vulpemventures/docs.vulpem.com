@@ -16,7 +16,7 @@ You can review the full API for that object [here](api.md).
 
 ## Install marina-provider
 
-To make your life easier, we have created a package that provides utilities and common types related to Marina. 
+To make things easier, we have created a package that provides utilities and common types related to Marina. 
 
 ```sh
 npm install marina-provider
