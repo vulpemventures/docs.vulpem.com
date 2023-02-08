@@ -145,7 +145,7 @@ Deny the website to access the user's wallet. It does not open any popup and doe
 marina.getNetwork(): Promise<'liquid' | 'testnet' | 'regtest'>
 ```
 
-Returns the network the wallet is connected to.
+Returns the network to which the wallet is connected.
 
 ### getAddresses
 
