@@ -29,17 +29,15 @@ try {
 For any non-trivial Liquid-powered web application to work, you will have to:
 
 - Detect if Marina provider is installed
-- If the first time for the user, ask permissions to connect
-- Detect which network the user is connected to (either `liquid` or `regtest`)
-- Get the user's Liquid addresses(s) and blinding keys
+- If the first time for the user, ask permissions to connect using `marina.enable()`
+- Detect which network the user is connected to (either `liquid` or `regtest`) using `marina.getNetwork()`
+- Get the user's Liquid addresses(s) and blinding keys using `marina.getNextAddress()`
 
 The snippet at the top of this page is sufficient for detecting the provider.
 
 The provider API is all you need to create a full-featured Liquid powered web application.
 
 ## API
-
-
 
 ### MarinaProvider
 
@@ -48,7 +46,6 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [getAccountInfo](#getaccountinfo)
 - [useAccount](#useaccount)
 - [createAccount](#createaccount)
-- [importTemplate](#importtemplate)
 - [enable](#enable)
 - [disable](#disable)
 - [getNetwork](#getnetwork)
@@ -63,7 +60,6 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 - [getCoins](#getcoins)
 - [getBalances](#getbalances)
 - [getFeeAssets](#getfeeassets)
-- [reloadCoins](#reloadcoins)
 - [on](#on)
 - [off](#off)
 
@@ -74,21 +70,36 @@ The provider API is all you need to create a full-featured Liquid powered web ap
 ### createAccount
 
 ```typescript
-marina.createAccount(accountID: AccountID): Promise<void>;
+marina.createAccount(accountID: AccountID, accountType: AccountType): Promise<void>;
 ```
+
 Open a popup, ask the password locking the marina private key.
 If the user accepts, marina will create a new account.
+
+Account types are:
+ * `AccountType.P2WPKH`: a standard segwit v0 account (default)
+ * `AccountType.Ionio`: an account using [Ionio](https://ionio-lang.org/) Artifact to generate taproot script.
+
+:::tip
+All accounts are *confidential* and generates blinding keys for each script according to [SLIP77](https://github.com/satoshilabs/slips/blob/master/slip-0077.md).
+:::
 
 ### getAccountInfo
 
 ```typescript
 marina.getAccountInfo(accountID: AccountID): Promise<AccountInfo>;
 ```
-Get the account info of the account `accountID` if it exists.
-All accounts include at least the following informations:
-* `accountID`: the account ID
-* `masterPublicKey`: the master public key of the account
-* `isReady`: whether the account is ready to use (i.e the user has set up the account's template(s)), "mainAccount" is always ready.
+Get the account info of the account `accountID` if it exists. Returns an error otherwise.
+
+```typescript
+export interface AccountInfo {
+  accountID: AccountID;
+  type: AccountType; 
+  masterXPub: string;
+  baseDerivationPath: string; // path to masterXPub
+  accountNetworks: NetworkString[]; // the account is available on these networks
+}
+```
 
 ### useAccount
 
@@ -97,26 +108,21 @@ marina.useAccount(accountID: AccountID): Promise<void>;
 ```
 Switch to account with ID = `accountID` if it exists. By default, current selected account is always "mainAccount".
 
-### importTemplate
-
-```typescript
-marina.importTemplate(template: { type: string; template: any }, changeTemplate: { type: string; template: any }): Promise<void>;
-```
-Configure the script template of the current selected account. The script template is used to generate the script of the account's addresses.
-If `changeTemplate` is undefined, `template` will be used as external and internal script generator.
-
 ### isEnabled
 
 ```typescript
 marina.isEnabled(): Promise<boolean>
 ```
 
+Returns whether the user has already granted permission to the website to access their wallet.
+If this returns false, some methods will throw an error.
+
 ### isReady
 
 ```typescript
 marina.isReady(): Promise<boolean>
-```
-> Returns true if the user has already set up a wallet.
+``` 
+Returns true if the user has already set up a wallet.
 
 ### enable
 
@@ -124,11 +130,15 @@ marina.isReady(): Promise<boolean>
 marina.enable(): Promise<void>
 ```
 
+Ask the user to grant permission to the website to access their wallet. It will open a popup and wait for the user response.
+
 ### disable
 
 ```typescript
 marina.disable(): Promise<void>
 ```
+
+Disable the website to access the user's wallet. It does not open any popup and does not need user interaction.
 
 ### getNetwork
 
@@ -136,10 +146,12 @@ marina.disable(): Promise<void>
 marina.getNetwork(): Promise<'liquid' | 'testnet' | 'regtest'>
 ```
 
+Returns the network the wallet is connected to.
+
 ### getAddresses
 
 ```typescript
-marina.getAddresses(accountIDs?: AccountID[]): Promise<AddressInterface[]>
+marina.getAddresses(accountIDs?: AccountID[]): Promise<Address[]>
 ```
 
 Returns the addresses of the accounts selected by `accountIDs`. If undefined, returns the addresses of all accounts.
@@ -147,16 +159,18 @@ Returns the addresses of the accounts selected by `accountIDs`. If undefined, re
 ### getNextAddress
 
 ```typescript
-marina.getNextAddress(): Promise<AddressInterface>
+marina.getNextAddress(ionioData?: ArtifactWithConstructorArgs): Promise<AddressInterface>
 ```
 Generate and persist in Marina a new external address for the current selected account.
+`ionioData` is expected if the current selected account is an Ionio account.
 
 ### getNextChangeAddress
 
 ```typescript
-marina.getNextChangeAddress(): Promise<AddressInterface>
+marina.getNextChangeAddress(ionioData?: ArtifactWithConstructorArgs): Promise<AddressInterface>
 ```
 Generate and persist in Marina a new internal address for the current selected account.
+`ionioData` is expected if the current selected account is an Ionio account.
 
 ### sendTransaction
 
@@ -194,6 +208,7 @@ Sign a message using the private key of the current selected account.
 marina.getCoins(accountIDs?: AccountID[]): Promise<Utxo[]>;
 ```
 Returns the UTXOs of the accounts selected by `accountIDs`. If undefined, returns the UTXOs of all accounts.
+`Utxo` contains all the data to spend the input (`witnessUtxo`, `blindingData` and `scriptDetails`).
 
 ### getTransactions
 
@@ -229,14 +244,6 @@ Returns a `string` unique ID using to identity the listener.
 marina.off(listenerId: EventListenerID): void;
 ```
 `off` stops the listener identified by `listenerId`.
-
-### reloadCoins
-
-```typescript
-marina.reloadCoins(accountIDs?: AccountID[]): Promise<void>;
-```
-Marina is running update tasks in the background using `UPDATE_TASK`. However, if you wish to reload the utxos/txs state for a specific account, you may use that method.
-reloadCoins lets you launch UPDATE_TASK for the `accountIDs` accounts. If not specified, reloadCoins will be launched for all accounts.
 
 
 ## Marina events
