@@ -41,7 +41,7 @@ To spend a coin locking by that script I need to provide:
 Marina is able to detect the artifact inputs and inject public keys and signatures automatically. To do this, the "injected" argument must be named like the account name. Fortunately, `@ionio-lang/ionio` provides us some helpers:
 
 :::tip
-`templateString` is an helper function using to rename `artifcat` arguments.
+`templateString` is an helper function using to rename `artifact` arguments.
 :::
 
 :::tip
