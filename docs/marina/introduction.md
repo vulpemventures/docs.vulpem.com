@@ -22,9 +22,15 @@ In the future we will allow authenticated JSONRPC HTTP/1.x connection to your ow
 
 Marina uses an embedded HD wallet and encrypts it with AES-256 the mnemonic seed with a password of choice and we always ask the user to unlock (ie. decrypt) with the password everytime we need to access the private keys to sign a transaction or to show the mnemonic.
 
-All the addresses are by default confidential native segwit (ie. BLECH32 format) and defaults to native segwit derivation defined in BIP84 `m/84’/0’/0’/0/0`. 
+The wallet is organized by accounts. Each account is a different path of the wallet's HD tree and is assigned with a unique name. By default, Marina creates _3 "main" accounts_:
+ * "mainAccount" (m/84'/1776'/0') enabled on Liquid mainnet only.
+ * "mainAccountTest" (m/84'/1'/0') enabled on Liquid testnet and regtest networks.
+ * "mainAccountLegacy" (m/84'/0'/0') enabled on all networks.
+All the main accounts are confidential P2WPKH (native segwit).
 
-:::caution
-It does not switch the Coin type, defaulting to 0 for both Liquid and RegTest. Therefore is strongly suggested to have a dedicated seed for each network.
-::::
+:::tip
+The "mainAccountLegacy" is not used by Marina extension to receive coins. It is only used to restore and spend the balance of legacy accounts created with the old version of Marina. 
+:::
+
+Marina let's you create additional custom accounts and uses [SLIP13](https://github.com/satoshilabs/slips/blob/master/slip-0013.md) to generate the derivation path directly from an account name.
 

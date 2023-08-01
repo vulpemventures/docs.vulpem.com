@@ -14,6 +14,7 @@ module.exports = {
         'marina/balances',
         'marina/transaction',
         'marina/api',
+        'marina/ionio-example',
       ],
     },
     {
