@@ -11,15 +11,17 @@ In order to have the app to build an unsigned transaction on behalf of the user,
 
 ## New address
 
-Derive a new confidential address and his blinding key for receiving funds
+Derive a new confidential address and his blinding key for receiving funds.
 ```js
 await window.marina.getNextAddress();
 /*
 {
-  confidentialAddress: string;
-  blindingPrivateKey: string;
+  publicKey: string;
+  script: string;
   derivationPath?: string;
-  publicKey?: string;
+  unconfidentialAddress?: string;
+  confidentialAddress?: string;
+  blindingPrivateKey?: string;
 }
 */
 ```
@@ -29,14 +31,6 @@ await window.marina.getNextAddress();
 Derive a new confidential address and his blinding key to be used as **change** output
 ```js
 await window.marina.getNextChangeAddress();
-/*
-{
-  confidentialAddress: string;
-  blindingPrivateKey: string;
-  derivationPath?: string;
-  publicKey?: string;
-}
-*/
 ```
 
 ## All addresses
@@ -46,41 +40,54 @@ Retrieve all derived confidential addresses with blinding keys till now
 await window.marina.getAddresses();
 ```
 
+## Balances
 
-## Fetch and unblind utxos
-
-
-Example using `fetchAndUnblindUtxos` from `ldk` package. In production prefer generator syntax exposed via `fetchAndUnblindUtxosGenerator` method instead.
-
-```jsx
-import { fetchAndUnblindUtxos } from 'ldk';
-
-//...
-
-// Get all addresses and blinding keys from marina
-const addrs = await window.marina.getAddresses();
-
-// fetch and unblind all utxos for given array of address
-//
-// THIS CAN TAKE A LOT OF TIME TO COMPLETE!
-// use fetchAndUnblindUtxosGenerator instead
-const utxos = await fetchAndUnblindUtxos(addrs, ESPLORA_API_URL);
-
-// It will return an array of unblinded utxos
-// we suggest to cache unblindData in order to speed-up
-// future transaction building and blinding.
-console.log(utxos);
+Retrieve all balances for all accounts held by the user
+```js
+await window.marina.getBalances();
 /*
-[
-  {
-    txid: string;
-    vout: number;
-    asset?: string;
-    value?: number;
-    prevout?: TxOutput;
-    unblindData?: confidential.UnblindOutputResult;
-  }
-]
+[{
+  asset: Asset, 
+  amount: number // expressed in satoshis
+}]
+*/
+```
+
+`Asset` objects contains data fetched from the liquid asset registry.
+```ts
+export interface Asset {
+  assetHash: string;
+  name: string;
+  precision: number;
+  ticker: string;
+};
+```
+
+## Unblinded Utxos
+
+Marina is unblinding UTXOs for you. Retrieve all the unblinded UTXOs:
+```js
+await window.marina.getCoins();
+```
+
+Returns a list of [Utxo](https://github.com/vulpemventures/marina-provider/blob/master/src/types.ts#L67). It contains unblinded asset/value pair, the blinding factors and data about the locking script. All the utxos returned by this method will be signed if passed via a pset to `marina.signTransaction` method.
+
+> ⚠️ **Warning**: UTXOs could be unconfidential, in this case blinding factors will be a 32 bytes buffer filled with 0s.
+
+
+## All transactions
+
+Marina is fetching all the transaction related to your addresses, confirmed and unconfirmed.
+
+```js
+await window.marina.getTransactions();
+/*
+[{
+  txId: string;
+  hex?: string; // marina is async, it's possible that hex is not fetched yet
+  height: number; // 0 means unconfirmed
+  explorerURL: string; // link to explorer page with revealed confidential data
+}]
 */
 ```
 
